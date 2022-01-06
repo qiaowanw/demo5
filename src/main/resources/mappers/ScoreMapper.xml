@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ScoreMapper">
+    <!--private Integer id;
+    private Integer chinese;
+    private Integer math;
+    private Integer english;
+    private Student students;
+    private Integer status;
+    private String creator;
+    private LocalDateTime createTime;
+    private String operator;
+    private LocalDateTime operateTime;-->
+
+    <resultMap id="scoreResultMap" type="com.example.demo.domain.Score">
+        <id property="id" column="sc_id"/>
+        <result property="chinese" column="sc_chinese"/>
+        <result property="math" column="sc_math"/>
+        <result property="english" column="sc_english"/>
+        <result property="status" column="s_status"/>
+        <result property="creator" column="s_create_user"/>
+        <result property="createTime" column="s_create_time"/>
+        <result property="operator" column="s_operator_user"/>
+        <result property="operateTime" column="s_operator_time"/>
+        <association property="student" column="s_id" javaType="com.example.demo.domain.Student" jdbcType="INTEGER">
+            <id property="id" column="s_id"/>
+            <result property="number" column="s_number"/>
+            <result property="sex" column="s_sex"/>
+            <result property="birthday" column="s_birthday"/>
+            <result property="age" column="s_age"/>
+            <result property="address" column="s_address"/>
+            <result property="tel" column="s_tel"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="scoreDTOResultMap" type="com.example.demo.dto.ScoreDTO">
+        <result property="studentName" column="s_name"/>
+        <result property="classesName" column="c_name"/>
+        <result property="chinese" column="sc_chinese"/>
+        <result property="math" column="sc_math"/>
+        <result property="english" column="sc_english"/>
+        <result property="score" column="score"/>
+    </resultMap>
+<!--    Score findBySid(Integer sid); //sid查score-->
+    <select id="findBySid" parameterType="java.lang.Integer" resultMap="scoreResultMap">
+        select sc_chinese,sc_math,sc_english from scores where s_id=#{id}
+    </select>
+
+    <select id="findByCondition" parameterType="com.example.demo.form.Condition"
+            resultMap="scoreDTOResultMap">
+        select s.s_name, c.c_number, c.c_name, sc.sc_math, sc.sc_english, sc.sc_chinese, floor((sc_chinese+sc_math+sc_english)/3) as score from
+        students s inner join classes c
+        on s.c_id = c.c_id
+        inner join scores sc
+        on s.s_id = sc.s_id
+        <where>
+            <!--<if test="studentName!=null">
+                 or s.s_name = #{studentName}
+            </if>
+            <if test="classesName!=null">
+                or c.c_name = #{classesName}
+            </if>-->
+            <if test="classesName!=null and studentName!=null">
+                or (c.c_name = #{classesName} and s.s_name = #{studentName})
+            </if>
+            <if test="avgMin!=null and avgMax!=null">
+                or (sc_chinese+sc_math+sc_english)/3  between #{avgMin} and #{avgMax}
+            </if>
+        </where>
+    </select>
+</mapper>

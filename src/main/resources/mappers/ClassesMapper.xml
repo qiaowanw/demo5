@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ClassesMapper">
+
+<!--    private Integer id;
+    private String number;
+    private  String name;
+    private Integer status;
+    private String creator;
+    private LocalDateTime createTime;
+    private String operator;
+    private LocalDateTime operateTime;-->
+    <resultMap id="classesResultMap" type="com.example.demo.domain.Classes">
+        <id property="id" column="c_id"/>
+        <result property="number" column="c_number"/>
+        <result property="name" column="c_name"/>
+        <result property="status" column="s_status"/>
+        <result property="creator" column="s_create_user"/>
+        <result property="createTime" column="s_create_time"/>
+        <result property="operator" column="s_operator_user"/>
+        <result property="operateTime" column="s_operator_time"/>
+    </resultMap>
+
+<!--    Integer findCidByCnumAndCname(String cnumber,String cname);//找出cid (class)-->
+    <select id="findCidByCnumAndCname" resultType="java.lang.Integer">
+        select c_id from classes where c_number=#{number} and c_name=#{name}
+    </select>
+
+    <select id="findCidByCname" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select c_id from classes where c_name=#{name}
+    </select>
+
+<!--    String findCnameByCid(@Param("id") Integer cid);-->
+    <select id="findCnameByCid" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select c_name from classes where c_id=#{id}
+    </select>
+
+    <select id="findAllCname" resultMap="classesResultMap">
+        select * from classes
+    </select>
+</mapper>

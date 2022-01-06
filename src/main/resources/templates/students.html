@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Students</title>
+  <script src="../static/js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<form>
+  student Number<input id="studentNumber" name="studentNumber"/><br>
+  student Name<input id="studentName" name="studentName"/><br>
+  <input id="btn_submit" type="button" value="查询学生基本信息和成绩"/><br>
+</form>
+<br>
+<table border="1px">
+  <tr>
+    <td>student Number</td>
+    <td>student Name</td>
+    <td>student classes Name</td>
+    <td>student Address</td>
+    <td>student Age</td>
+    <td>student chinese</td>
+    <td>student math</td>
+    <td>student english</td>
+    <td>totalScore</td>
+    <td>avg Score</td>
+  </tr>
+
+  <tr>
+    <td id="tdStudentNumber"></td>
+    <td id="tdStudentName"></td>
+    <td id="tdStudentClassName"></td>
+    <td id="tdStudentAddress"></td>
+    <td id="tdStudentAge"></td>
+    <td id="tdStudentChinese"></td>
+    <td id="tdStudentMath"></td>
+    <td id="tdStudentEnglish"></td>
+    <td id="tdStudentTotalScore"></td>
+    <td id="tdStudentAvgScore"></td>
+  </tr>
+</table>
+</body>
+<script>
+  $(document).ready(function () {
+    $("#btn_submit").click(function () {
+      let studentNumber = $('#studentNumber').val();
+      let studentName = $('#studentName').val();
+      let url = 'http://localhost:8080/students?studentNumber=' + studentNumber + '&studentName=' + studentName;
+      let result = $.ajax({
+        url: url, async: false
+      });
+      let student = JSON.parse(result.responseText);
+      $("#tdStudentNumber").html(student.studentNum);
+      $("#tdStudentName").html(student.studentName);
+      $("#tdStudentClassName").html(student.className);
+      $("#tdStudentAddress").html(student.address);
+      $("#tdStudentAge").html(student.age);
+      $("#tdStudentChinese").html(student.chinese);
+      $("#tdStudentMath").html(student.math);
+      $("#tdStudentEnglish").html(student.english);
+      $("#tdStudentTotalScore").html(student.total);
+      $("#tdStudentAvgScore").html(student.avg);
+    });
+  });
+</script>
+</html>

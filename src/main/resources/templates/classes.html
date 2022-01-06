@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+    <style type="text/css">
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 10px;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0 auto;
+        }
+
+        td,th {
+            padding: 0;
+        }
+
+        .pure-table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+            border: 1px solid #cbcbcb;
+        }
+
+        .pure-table caption {
+            color: #000;
+            font: italic 85%/1 arial,sans-serif;
+            padding: 1em 0;
+            text-align: center;
+        }
+
+        .pure-table td,.pure-table th {
+            border-left: 1px solid #cbcbcb;
+            border-width: 0 0 0 1px;
+            font-size: inherit;
+            margin: 0;
+            overflow: visible;
+            padding: .5em 1em;
+        }
+
+        .pure-table thead {
+            background-color: #e0e0e0;
+            color: #000;
+            text-align: left;
+            vertical-align: bottom;
+        }
+
+        .pure-table td {
+            background-color: transparent;
+        }
+
+        .pure-table-bordered td {
+            border-bottom: 1px solid #cbcbcb;
+        }
+
+        .pure-table-bordered tbody>tr:last-child>td {
+            border-bottom-width: 0;
+        }
+
+
+        .form-style-1 {
+            margin:10px auto;
+            max-width: 400px;
+            padding: 20px 12px 10px 20px;
+            font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        }
+        .form-style-1 li {
+            padding: 0;
+            display: block;
+            list-style: none;
+            margin: 10px 0 0 0;
+        }
+        .form-style-1 label{
+            margin:0 0 3px 0;
+            padding:0px;
+            display:block;
+            font-weight: bold;
+        }.form-style-1 .field-divided{
+             width: 49%;
+         }
+
+        .form-style-1 .field-long{
+            width: 100%;
+        }
+        .form-style-1 .field-select{
+            width: 100%;
+        }
+        .form-style-1 .field-textarea{
+            height: 100px;
+        }
+        .form-style-1 input[type=submit], .form-style-1 input[type=button]{
+            background: #4B99AD;
+            padding: 8px 15px 8px 15px;
+            border: none;
+            color: #fff;
+        }
+        .form-style-1 input[type=submit]:hover, .form-style-1 input[type=button]:hover{
+            background: #4691A4;
+            box-shadow:none;
+            -moz-box-shadow:none;
+            -webkit-box-shadow:none;
+        }
+        .form-style-1 .required{
+            color:red;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<form>
+    <ul class="form-style-1">
+        <li>
+            <label>班级编号<span class="required">*</span></label>
+            <input id="classesNumber" type="text" name="classesNumber" class="field-divided" />
+        </li>
+        <li>
+            <label>班级姓名<span class="required">*</span></label>
+            <input id="classesName" name="classesName" class="field-divided"  />
+        </li>
+        <li>
+            <input id="btn_submit" type="button" value="查询班级基本信息和成绩"/><br>
+        </li>
+    </ul>
+</form>
+<br>
+<table class="pure-table pure-table-bordered">
+    <tr>
+        <td>classes Number</td>
+        <td>classes Name</td>
+        <td>avg chinese</td>
+        <td>avg math</td>
+        <td>avg english</td>
+        <td>avg total</td>
+    </tr>
+    <tr>
+        <td id="tdClassesNumber"></td>
+        <td id="tdClassesName"></td>
+        <td id="tdAvgChinese"></td>
+        <td id="tdAvgMath"></td>
+        <td id="tdAvgEnglish"></td>
+        <td id="tdAvgTotal"></td>
+    </tr>
+</table>
+</body>
+<script>
+    $(document).ready(function () {
+        $("#btn_submit").click(function () {
+            let classesNumber = $('#classesNumber').val();
+            let classesName = $('#classesName').val();
+            let url = 'http://localhost:8080/classes?classesNumber=' + classesNumber + '&classesName=' + classesName;
+            let result = $.ajax({
+                url: url, async: false
+            });
+            let classes = JSON.parse(result.responseText);
+            $("#tdClassesNumber").html(classes.classesNumber);
+            $("#tdClassesName").html(classes.classesName);
+            $("#tdAvgChinese").html(classes.avgChinese);
+            $("#tdAvgMath").html(classes.avgMath);
+            $("#tdAvgEnglish").html(classes.avgEnglish);
+            $("#tdAvgTotal").html(classes.avgTotal);
+        });
+    });
+</script>
+</html>

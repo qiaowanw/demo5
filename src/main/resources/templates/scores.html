@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Score</title>
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<select id="classes">
+    <option>请选择</option>
+</select>
+<select id="students">
+</select>
+<input id="avgMin" name="avgMin"/>
+<input id="avgMax" name="avgMax"/>
+<input id="btn_submit" type="button" value="查询"/>
+<br>
+<table border="1px">
+    <tr>
+        <td>学生姓名</td>
+        <td>班级名称</td>
+        <td>语文</td>
+        <td>数学</td>
+        <td>英语</td>
+        <td>平均分</td>
+    </tr>
+
+    <tr>
+        <td id="tdStudentName"></td>
+        <td id="tdClassesName"></td>
+        <td id="tdChinese"></td>
+        <td id="tdMath"></td>
+        <td id="tdEnglish"></td>
+        <td id="tdScore"></td>
+    </tr>
+</table>
+</body>
+<script>
+    $(document).ready(function () {
+        let result = $.ajax({
+            url: 'http://localhost:8080/allClasses', async: false
+        });
+        let classesArr = JSON.parse(result.responseText);
+        for(let i = 0; i < classesArr.length; i++) {
+            jQuery("<option value='" + classesArr[i].id + "'>"+classesArr[i].name+"</option>").appendTo("#classes");
+        }
+
+        $("#students").empty();
+        let result1 = $.ajax({
+            url: 'http://localhost:8080/allStudents?classesId='+$("#classes").find("option:selected").val(), async: false
+        });
+        let studentArr = JSON.parse(result1.responseText);
+        for(let i = 0; i < studentArr.length; i++) {
+            jQuery("<option value='" + studentArr[i].name + "'>"+studentArr[i].name+"</option>").appendTo("#students");
+        }
+    });
+
+    $(document).ready(function () {
+        $('#classes').change(function () {
+            $("#students").empty();
+            let result = $.ajax({
+                url: 'http://localhost:8080/allStudents?classesId='+$("#classes").find("option:selected").val(), async: false
+            });
+            let studentArr = JSON.parse(result.responseText);
+            for(let i = 0; i < studentArr.length; i++) {
+                jQuery("<option value='" + studentArr[i].name + "'>"+studentArr[i].name+"</option>").appendTo("#students");
+            }
+        });
+
+        $("#btn_submit").click(function () {
+
+            let classes = $('#classes').val();
+            let students = $('#students').val();
+            let avgMin = $('#avgMin').val();
+            let avgMax = $('#avgMax').val();
+            let url = 'http://localhost:8080/scores?studentName='+ students + '&classesName=' + classes + '&avgMin=' + avgMin + '&avgMax=' + avgMax;
+            let result = $.ajax({
+                url: url , async: false
+            });
+
+            let scoreDTOArr = JSON.parse(result.responseText);
+            for(let i = 0; i < scoreDTOArr.length; i++) {
+                $("#tdStudentName").html(scoreDTOArr[i].studentName);
+                $("#tdClassesName").html(scoreDTOArr[i].classesName);
+                $("#tdChinese").html(scoreDTOArr[i].chinese);
+                $("#tdMath").html(scoreDTOArr[i].math);
+                $("#tdEnglish").html(scoreDTOArr[i].english);
+                $("#tdScore").html(scoreDTOArr[i].score);
+            }
+        });
+    });
+</script>
+</html>

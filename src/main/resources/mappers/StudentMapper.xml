@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.StudentMapper">
+
+    <resultMap id="studentResultMap" type="com.example.demo.domain.Student">
+        <id property="id" column="s_id"/>
+        <result property="number" column="s_number"/>
+        <result property="name" column="s_name"/>
+        <result property="sex" column="s_sex"/>
+        <result property="birthday" column="s_birthday"/>
+        <result property="age" column="s_age"/>
+        <result property="address" column="s_address"/>
+        <result property="tel" column="s_tel"/>
+        <result property="status" column="s_status"/>
+        <result property="creator" column="s_create_user"/>
+        <result property="createTime" column="s_create_time"/>
+        <result property="operator" column="s_operator_user"/>
+        <result property="operateTime" column="s_operator_time"/>
+
+        <association property="classes" column="c_id" javaType="com.example.demo.domain.Classes" jdbcType="INTEGER">
+            <id property="id" column="c_id"/>
+            <result property="number" column="c_number"/>
+            <result property="name" column="c_name"/>
+        </association>
+    </resultMap>
+
+
+    <select id="findSidBySnumAndSname" resultMap="studentResultMap">
+        select * from students where s_number=#{number} and s_name=#{name}
+    </select>
+
+    <select id="findStudentByCid" parameterType="java.lang.Integer" resultMap="studentResultMap">
+        select * from students where c_id=#{id}
+    </select>
+
+    <select id="findSidBySname" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select s_id from students where s_name=#{name}
+    </select>
+
+    <select id="findAll" resultMap="studentResultMap">
+        select * from students
+    </select>
+
+    <select id="findCidBySid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select c_id from students where s_id=#{id}
+    </select>
+
+    <select id="findMax" resultType="java.lang.String">
+        select s_number from students order by s_number desc limit 1
+    </select>
+
+    <insert id="save" parameterType="com.example.demo.domain.Student">
+        insert into students(s_number) values(#{number})
+    </insert>
+</mapper>
